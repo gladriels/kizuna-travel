@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Kizuna Travel Agency</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Syne:wght@400;500;700;800&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f2ee;
+    --cream: #ede8e0;
+    --red: #c0392b;
+    --gold: #b8933a;
+    --mid: #5a5550;
+    --serif: 'Cormorant Garamond', serif;
+    --sans: 'Syne', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--sans);
+    cursor: none;
+    overflow-x: hidden;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 10px; height: 10px;
+    background: var(--white);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 40px; height: 40px;
+    border: 1px solid rgba(245,242,238,0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease, width 0.3s, height 0.3s, border-color 0.3s;
+  }
+  body:has(.card:hover) .cursor { width: 60px; height: 60px; background: transparent; border: 1px solid var(--white); }
+  body:has(.card:hover) .cursor-ring { width: 0; height: 0; }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px 52px;
+    mix-blend-mode: difference;
+  }
+  .logo {
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    font-weight: 400;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+  .logo span { color: var(--gold); }
+  nav ul { list-style: none; display: flex; gap: 42px; }
+  nav ul a {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--white);
+    text-decoration: none;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+  }
+  nav ul a:hover { opacity: 1; }
+
+  /* HERO */
+  .hero {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-panel {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-panel img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transform: scale(1.08);
+    transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    filter: brightness(0.55);
+  }
+
+  .hero-panel:hover img {
+    transform: scale(1.0);
+    filter: brightness(0.7);
+  }
+
+  .panel-label {
+    position: absolute;
+    bottom: 60px;
+    left: 48px;
+    z-index: 2;
+  }
+
+  .panel-label .country {
+    font-family: var(--serif);
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    font-weight: 300;
+    line-height: 1;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 1s ease forwards;
+  }
+
+  .panel-label .tagline {
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    opacity: 0;
+    margin-top: 10px;
+    color: var(--gold);
+    animation: fadeUp 1s ease 0.2s forwards;
+  }
+
+  .hero-divider {
+    position: absolute;
+    left: 50%;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: rgba(245,242,238,0.15);
+    transform: translateX(-50%);
+    z-index: 10;
+  }
+
+  .hero-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 20;
+    text-align: center;
+  }
+
+  .hero-center .kizuna {
+    font-family: var(--serif);
+    font-size: clamp(1rem, 1.5vw, 1.3rem);
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    color: var(--white);
+    opacity: 0;
+    animation: fadeUp 1s ease 0.4s forwards;
+  }
+
+  .hero-center .kanji {
+    font-size: clamp(3rem, 5vw, 4rem);
+    line-height: 1;
+    margin: 8px 0;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.6s forwards;
+    color: var(--gold);
+    font-family: var(--serif);
+  }
+
+  .hero-center .meaning {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.8s forwards;
+    color: rgba(245,242,238,0.5);
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    animation: fadeUp 1s ease 1.2s forwards;
+  }
+
+  .scroll-hint span {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    opacity: 0.4;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(to bottom, rgba(245,242,238,0.5), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { transform: scaleY(1); opacity: 1; }
+    50% { transform: scaleY(0.5); opacity: 0.3; }
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* MARQUEE */
+  .marquee-wrap {
+    overflow: hidden;
+    border-top: 1px solid rgba(245,242,238,0.08);
+    border-bottom: 1px solid rgba(245,242,238,0.08);
+    padding: 18px 0;
+    background: #0d0d0d;
+  }
+
+  .marquee-track {
+    display: flex;
+    gap: 60px;
+    white-space: nowrap;
+    animation: marquee 20s linear infinite;
+  }
+
+  .marquee-track span {
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    opacity: 0.35;
+    flex-shrink: 0;
+  }
+
+  .marquee-track span.dot { color: var(--gold); opacity: 0.6; }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* SECTION: TOURS */
+  .section-tours {
+    padding: 120px 52px;
+    background: var(--black);
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 72px;
+  }
+
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 300;
+    line-height: 1.1;
+  }
+
+  .section-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .section-meta {
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    opacity: 0.4;
+    text-align: right;
+  }
+
+  /* Cards grid */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 2px;
+    aspect-ratio: 3/4;
+    cursor: none;
+  }
+
+  .card img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transform: scale(1.05);
+    transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    filter: brightness(0.5);
+  }
+
+  .card:hover img {
+    transform: scale(1.0);
+    filter: brightness(0.65);
+  }
+
+  .card-body {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 36px 28px;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%);
+  }
+
+  .card-tag {
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .card-title {
+    font-family: var(--serif);
+    font-size: 1.6rem;
+    font-weight: 300;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .card-price {
+    font-size: 0.75rem;
+    opacity: 0.6;
+    letter-spacing: 0.1em;
+  }
+
+  .card-arrow {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(245,242,238,0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+    transform: rotate(-45deg);
+  }
+
+  .card:hover .card-arrow {
+    background: var(--white);
+    color: var(--black);
+    border-color: var(--white);
+    transform: rotate(0deg);
+  }
+
+  /* ABOUT */
+  .section-about {
+    padding: 120px 52px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    background: #0d0d0d;
+  }
+
+  .about-text .eyebrow {
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+    display: block;
+  }
+
+  .about-text h2 {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 300;
+    line-height: 1.2;
+    margin-bottom: 32px;
+  }
+
+  .about-text p {
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    line-height: 1.9;
+    opacity: 0.65;
+    font-weight: 300;
+    margin-bottom: 16px;
+  }
+
+  .about-image {
+    position: relative;
+  }
+
+  .about-image img {
+    width: 100%;
+    aspect-ratio: 4/5;
+    object-fit: cover;
+    filter: brightness(0.75);
+  }
+
+  .about-image::before {
+    content: '';
+    position: absolute;
+    top: -20px; left: -20px;
+    right: 20px; bottom: 20px;
+    border: 1px solid rgba(184,147,58,0.2);
+    z-index: -1;
+  }
+
+  /* STATS */
+  .stats {
+    display: flex;
+    gap: 48px;
+    margin-top: 48px;
+    padding-top: 48px;
+    border-top: 1px solid rgba(245,242,238,0.08);
+  }
+
+  .stat-item .number {
+    font-family: var(--serif);
+    font-size: 2.8rem;
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .stat-item .label {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.4;
+    margin-top: 6px;
+  }
+
+  /* CTA */
+  .section-cta {
+    padding: 160px 52px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    background: var(--black);
+  }
+
+  .section-cta::before {
+    content: '絆';
+    position: absolute;
+    font-family: var(--serif);
+    font-size: 40vw;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.03;
+    pointer-events: none;
+    line-height: 1;
+  }
+
+  .section-cta h2 {
+    font-family: var(--serif);
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 300;
+    line-height: 1.1;
+    margin-bottom: 24px;
+    position: relative;
+  }
+
+  .section-cta p {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    opacity: 0.5;
+    margin-bottom: 52px;
+    font-weight: 300;
+    position: relative;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 48px;
+    border: 1px solid var(--white);
+    font-family: var(--sans);
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--white);
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%; right: 100%; bottom: 0;
+    background: var(--white);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: -1;
+  }
+
+  .btn:hover::before { left: 0; right: 0; }
+  .btn:hover { color: var(--black); }
+
+  /* FOOTER */
+  footer {
+    padding: 48px 52px;
+    border-top: 1px solid rgba(245,242,238,0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  footer .logo { font-size: 0.9rem; }
+
+  footer p {
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    opacity: 0.3;
+    text-transform: uppercase;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    nav { padding: 24px 28px; }
+    nav ul { gap: 24px; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-panel:first-child { display: none; }
+    .section-tours, .section-about, .section-cta, footer { padding-left: 28px; padding-right: 28px; }
+    .cards { grid-template-columns: 1fr; }
+    .section-about { grid-template-columns: 1fr; }
+    .about-image { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Kizuna <span>旅</span></div>
+  <ul>
+    <li><a href="#tours">Tours</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-panel">
+    <img src="images/mongolia1.jpg" alt="Mongolia landscape"/>
+    <div class="panel-label">
+      <div class="country">Mongolia</div>
+      <div class="tagline">The eternal blue sky</div>
+    </div>
+  </div>
+
+  <div class="hero-panel">
+    <img src="images/japan1.jpg" alt="Japan cityscape"/>
+    <div class="panel-label">
+      <div class="country">Japan</div>
+      <div class="tagline">Where tradition breathes</div>
+    </div>
+  </div>
+
+  <div class="hero-divider"></div>
+
+  <div class="hero-center">
+    <div class="kizuna">Kizuna</div>
+    <div class="kanji">絆</div>
+    <div class="meaning">Bond · Connection · Journey</div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span>Ulaanbaatar</span><span class="dot">✦</span>
+    <span>Tokyo</span><span class="dot">✦</span>
+    <span>Gobi Desert</span><span class="dot">✦</span>
+    <span>Kyoto</span><span class="dot">✦</span>
+    <span>Terelj National Park</span><span class="dot">✦</span>
+    <span>Osaka</span><span class="dot">✦</span>
+    <span>Khövsgöl Lake</span><span class="dot">✦</span>
+    <span>Hokkaido</span><span class="dot">✦</span>
+    <span>Ulaanbaatar</span><span class="dot">✦</span>
+    <span>Tokyo</span><span class="dot">✦</span>
+    <span>Gobi Desert</span><span class="dot">✦</span>
+    <span>Kyoto</span><span class="dot">✦</span>
+    <span>Terelj National Park</span><span class="dot">✦</span>
+    <span>Osaka</span><span class="dot">✦</span>
+    <span>Khövsgöl Lake</span><span class="dot">✦</span>
+    <span>Hokkaido</span><span class="dot">✦</span>
+  </div>
+</div>
+
+<!-- TOURS -->
+<section class="section-tours" id="tours">
+  <div class="section-header">
+    <h2 class="section-title">Curated<br/><em>Journeys</em></h2>
+    <div class="section-meta">Handpicked routes<br/>2025 season</div>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=800&q=80" alt="Gobi Desert"/>
+      <div class="card-body">
+        <span class="card-tag">Mongolia → Japan</span>
+        <div class="card-title">Steppe to<br/>Sakura</div>
+        <div class="card-footer">
+          <span class="card-price">12 days · from $2,400</span>
+          <div class="card-arrow">→</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top: 40px;">
+      <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&q=80" alt="Kyoto"/>
+      <div class="card-body">
+        <span class="card-tag">Japan → Mongolia</span>
+        <div class="card-title">Kyoto<br/>to Gobi</div>
+        <div class="card-footer">
+          <span class="card-price">10 days · from $2,100</span>
+          <div class="card-arrow">→</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80" alt="Mongolia mountains"/>
+      <div class="card-body">
+        <span class="card-tag">Full Circuit</span>
+        <div class="card-title">The Bond<br/>Route</div>
+        <div class="card-footer">
+          <span class="card-price">21 days · from $4,800</span>
+          <div class="card-arrow">→</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section-about" id="about">
+  <div class="about-text">
+    <span class="eyebrow">Our Story</span>
+    <h2>Two lands.<br/>One bond.</h2>
+    <p>Kizuna was born from a simple belief — that Mongolia and Japan, separated by thousands of miles, share a quiet kinship. In the vast steppe and the disciplined streets of Tokyo alike, there is space, intention, and beauty.</p>
+    <p>We craft journeys that let you feel both worlds, not just see them. Small groups, local guides, real experiences.</p>
+    <div class="stats">
+      <div class="stat-item">
+        <div class="number">7+</div>
+        <div class="label">Years operating</div>
+      </div>
+      <div class="stat-item">
+        <div class="number">340</div>
+        <div class="label">Travelers hosted</div>
+      </div>
+      <div class="stat-item">
+        <div class="number">18</div>
+        <div class="label">Unique routes</div>
+      </div>
+    </div>
+  </div>
+  <div class="about-image">
+    <img src="images/landscape1.jpg" alt="Japan culture"/>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section-cta" id="contact">
+  <h2>Ready to cross<br/><em>the steppe?</em></h2>
+  <p>Let's plan your journey between two extraordinary worlds.</p>
+  <a href="mailto:hello@kizunatravel.com" class="btn">Start Planning →</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">Kizuna <span style="color:var(--gold)">旅</span></div>
+  <p>© 2025 Kizuna Travel Agency · Ulaanbaatar, Mongolia</p>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+
+  function animateRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.card, .stat-item, .about-text p').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(24px)';
+    el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
