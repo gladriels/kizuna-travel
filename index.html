@@ -11,12 +11,15 @@
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
-    --black: #0a0a0a;
-    --white: #f5f2ee;
-    --cream: #ede8e0;
+    --black: #f5f2ee;
+    --white: #1a1714;
+    --cream: #e8e3db;
     --red: #c0392b;
-    --gold: #b8933a;
-    --mid: #5a5550;
+    --gold: #9a7a28;
+    --mid: #7a736b;
+    --bg: #f5f2ee;
+    --bg2: #eee9e1;
+    --text: #1a1714;
     --serif: 'Cormorant Garamond', serif;
     --sans: 'Syne', sans-serif;
   }
@@ -24,8 +27,8 @@
   html { scroll-behavior: smooth; }
 
   body {
-    background: var(--black);
-    color: var(--white);
+    background: var(--bg);
+    color: var(--text);
     font-family: var(--sans);
     cursor: none;
     overflow-x: hidden;
@@ -35,7 +38,7 @@
   .cursor {
     position: fixed;
     width: 10px; height: 10px;
-    background: var(--white);
+    background: var(--text);
     border-radius: 50%;
     pointer-events: none;
     z-index: 9999;
@@ -45,14 +48,14 @@
   .cursor-ring {
     position: fixed;
     width: 40px; height: 40px;
-    border: 1px solid rgba(245,242,238,0.4);
+    border: 1px solid rgba(26,23,20,0.3);
     border-radius: 50%;
     pointer-events: none;
     z-index: 9998;
     transform: translate(-50%, -50%);
     transition: transform 0.15s ease, width 0.3s, height 0.3s, border-color 0.3s;
   }
-  body:has(.card:hover) .cursor { width: 60px; height: 60px; background: transparent; border: 1px solid var(--white); }
+  body:has(.card:hover) .cursor { width: 60px; height: 60px; background: transparent; border: 1px solid var(--text); }
   body:has(.card:hover) .cursor-ring { width: 0; height: 0; }
 
   /* NAV */
@@ -64,7 +67,9 @@
     justify-content: space-between;
     align-items: center;
     padding: 28px 52px;
-    mix-blend-mode: difference;
+    background: rgba(245,242,238,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(26,23,20,0.07);
   }
   .logo {
     font-family: var(--serif);
@@ -72,7 +77,7 @@
     font-weight: 400;
     letter-spacing: 0.3em;
     text-transform: uppercase;
-    color: var(--white);
+    color: var(--text);
   }
   .logo span { color: var(--gold); }
   nav ul { list-style: none; display: flex; gap: 42px; }
@@ -80,9 +85,9 @@
     font-size: 0.72rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--white);
+    color: var(--text);
     text-decoration: none;
-    opacity: 0.7;
+    opacity: 0.5;
     transition: opacity 0.3s;
   }
   nav ul a:hover { opacity: 1; }
@@ -229,10 +234,10 @@
   /* MARQUEE */
   .marquee-wrap {
     overflow: hidden;
-    border-top: 1px solid rgba(245,242,238,0.08);
-    border-bottom: 1px solid rgba(245,242,238,0.08);
+    border-top: 1px solid rgba(26,23,20,0.1);
+    border-bottom: 1px solid rgba(26,23,20,0.1);
     padding: 18px 0;
-    background: #0d0d0d;
+    background: var(--cream);
   }
 
   .marquee-track {
@@ -293,53 +298,64 @@
   /* Cards grid */
   .cards {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
   }
 
   .card {
     position: relative;
     overflow: hidden;
     border-radius: 2px;
-    aspect-ratio: 3/4;
+    aspect-ratio: 2/3;
     cursor: none;
+    transform-style: preserve-3d;
+    transition: box-shadow 0.4s ease;
+    will-change: transform;
+  }
+
+  .card:hover {
+    box-shadow: 0 30px 60px rgba(0,0,0,0.5);
   }
 
   .card img {
     width: 100%; height: 100%;
     object-fit: cover;
-    transform: scale(1.05);
-    transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    filter: brightness(0.5);
+    transform: scale(1.06);
+    transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.5s;
+    filter: brightness(0.45);
+    pointer-events: none;
   }
 
   .card:hover img {
     transform: scale(1.0);
-    filter: brightness(0.65);
+    filter: brightness(0.6);
   }
 
   .card-body {
     position: absolute;
     bottom: 0; left: 0; right: 0;
-    padding: 36px 28px;
-    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%);
+    padding: 28px 22px;
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
+    transition: padding 0.4s ease;
   }
 
+  .card:hover .card-body { padding-bottom: 34px; }
+
   .card-tag {
-    font-size: 0.6rem;
+    font-size: 0.55rem;
     letter-spacing: 0.25em;
     text-transform: uppercase;
     color: var(--gold);
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     display: block;
   }
 
   .card-title {
     font-family: var(--serif);
-    font-size: 1.6rem;
+    font-size: 1.35rem;
     font-weight: 300;
     line-height: 1.2;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
   }
 
   .card-footer {
@@ -349,21 +365,22 @@
   }
 
   .card-price {
-    font-size: 0.75rem;
+    font-size: 0.65rem;
     opacity: 0.6;
     letter-spacing: 0.1em;
   }
 
   .card-arrow {
-    width: 36px; height: 36px;
+    width: 32px; height: 32px;
     border: 1px solid rgba(245,242,238,0.3);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     transition: all 0.3s;
     transform: rotate(-45deg);
+    flex-shrink: 0;
   }
 
   .card:hover .card-arrow {
@@ -371,6 +388,169 @@
     color: var(--black);
     border-color: var(--white);
     transform: rotate(0deg);
+  }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    transition: background 0.4s ease;
+  }
+
+  .modal-overlay.active {
+    background: rgba(0,0,0,0.85);
+    pointer-events: all;
+  }
+
+  .modal {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 80vw;
+    max-width: 1000px;
+    max-height: 85vh;
+    background: #111;
+    opacity: 0;
+    transform: translateY(40px) scale(0.97);
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    overflow: hidden;
+  }
+
+  .modal-overlay.active .modal {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  .modal-image {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .modal-image img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: brightness(0.7);
+    transform: scale(1.03);
+    transition: transform 6s ease;
+  }
+
+  .modal-overlay.active .modal-image img {
+    transform: scale(1);
+  }
+
+  .modal-content {
+    padding: 52px 44px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow-y: auto;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 24px; right: 24px;
+    width: 44px; height: 44px;
+    border: 1px solid rgba(245,242,238,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: none;
+    font-size: 1rem;
+    color: var(--white);
+    background: rgba(0,0,0,0.4);
+    transition: all 0.3s;
+    z-index: 10;
+  }
+
+  .modal-close:hover {
+    background: var(--white);
+    color: var(--black);
+    border-color: var(--white);
+  }
+
+  .modal-tag {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .modal-title {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 3vw, 2.8rem);
+    font-weight: 300;
+    line-height: 1.1;
+    margin-bottom: 28px;
+  }
+
+  .modal-divider {
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+    margin-bottom: 28px;
+  }
+
+  .modal-desc {
+    font-family: var(--serif);
+    font-size: 1rem;
+    line-height: 1.85;
+    opacity: 0.65;
+    font-weight: 300;
+    margin-bottom: 32px;
+  }
+
+  .modal-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 36px;
+    padding: 24px;
+    border: 1px solid rgba(245,242,238,0.08);
+  }
+
+  .modal-meta-item .label {
+    font-size: 0.55rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    opacity: 0.4;
+    margin-bottom: 6px;
+  }
+
+  .modal-meta-item .value {
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    font-weight: 300;
+  }
+
+  .modal-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 36px;
+    border: 1px solid var(--white);
+    font-family: var(--sans);
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--white);
+    text-decoration: none;
+    background: transparent;
+    cursor: none;
+    transition: all 0.3s;
+    width: fit-content;
+  }
+
+  .modal-btn:hover {
+    background: var(--white);
+    color: var(--black);
   }
 
   /* ABOUT */
@@ -541,6 +721,296 @@
     text-transform: uppercase;
   }
 
+  /* CINEMATIC STRIPS */
+  .strip {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 21/9;
+    overflow: hidden;
+    cursor: none;
+  }
+
+  .strip img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transform: scale(1.06);
+    transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    filter: brightness(0.45);
+  }
+
+  .strip:hover img {
+    transform: scale(1.0);
+    filter: brightness(0.6);
+  }
+
+  .strip-body {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 52px 64px;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%);
+    transition: padding 0.4s ease;
+  }
+
+  .strip:hover .strip-body { padding-bottom: 64px; }
+
+  .strip-location {
+    font-size: 0.6rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+
+  .strip-title {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 300;
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .strip-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.62rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .strip:hover .strip-cta {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .strip-cta span {
+    width: 28px;
+    height: 1px;
+    background: var(--gold);
+    transition: width 0.3s ease;
+  }
+
+  .strip:hover .strip-cta span { width: 44px; }
+
+  /* DESTINATION PAGE */
+  .dest-page {
+    position: fixed;
+    inset: 0;
+    background: var(--black);
+    z-index: 2000;
+    transform: translateY(100%);
+    transition: transform 0.7s cubic-bezier(0.77, 0, 0.175, 1);
+    overflow-y: auto;
+  }
+
+  .dest-page.active {
+    transform: translateY(0);
+  }
+
+  .dest-hero {
+    position: relative;
+    width: 100%;
+    height: 70vh;
+    overflow: hidden;
+  }
+
+  .dest-hero img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: brightness(0.5);
+    transform: scale(1.03);
+    transition: transform 6s ease;
+  }
+
+  .dest-page.active .dest-hero img {
+    transform: scale(1);
+  }
+
+  .dest-hero-content {
+    position: absolute;
+    bottom: 60px;
+    left: 64px;
+    right: 64px;
+  }
+
+  .dest-eyebrow {
+    font-size: 0.6rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .dest-name {
+    font-family: var(--serif);
+    font-size: clamp(3rem, 7vw, 6rem);
+    font-weight: 300;
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .dest-tagline {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    font-weight: 300;
+    opacity: 0.6;
+    font-style: italic;
+  }
+
+  .dest-back {
+    position: fixed;
+    top: 28px;
+    left: 52px;
+    z-index: 2100;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.62rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--white);
+    cursor: none;
+    background: none;
+    border: none;
+    padding: 0;
+    transition: opacity 0.3s;
+  }
+
+  .dest-back:hover { opacity: 0.6; }
+
+  .dest-back-arrow {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(245,242,238,0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .dest-body {
+    padding: 80px 64px;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 80px;
+    max-width: 1200px;
+  }
+
+  .dest-desc {
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    line-height: 1.9;
+    opacity: 0.7;
+    font-weight: 300;
+    margin-bottom: 40px;
+  }
+
+  .dest-highlights {
+    margin-bottom: 40px;
+  }
+
+  .dest-highlights h3 {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+
+  .dest-highlights ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .dest-highlights li {
+    font-family: var(--serif);
+    font-size: 1rem;
+    opacity: 0.65;
+    padding-left: 20px;
+    position: relative;
+    font-weight: 300;
+  }
+
+  .dest-highlights li::before {
+    content: '✦';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-size: 0.5rem;
+    top: 6px;
+  }
+
+  .dest-sidebar {
+    padding-top: 8px;
+  }
+
+  .dest-info-box {
+    border: 1px solid rgba(245,242,238,0.08);
+    padding: 36px;
+    margin-bottom: 24px;
+  }
+
+  .dest-info-box h3 {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+
+  .dest-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(245,242,238,0.06);
+  }
+
+  .dest-info-row:last-child { border-bottom: none; }
+
+  .dest-info-row .key {
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.35;
+  }
+
+  .dest-info-row .val {
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 300;
+  }
+
+  .dest-book-btn {
+    display: block;
+    width: 100%;
+    padding: 18px;
+    border: 1px solid var(--white);
+    background: transparent;
+    color: var(--white);
+    font-family: var(--sans);
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    text-align: center;
+    text-decoration: none;
+    cursor: none;
+    transition: all 0.3s;
+  }
+
+  .dest-book-btn:hover {
+    background: var(--white);
+    color: var(--black);
+  }
+
   /* Responsive */
   @media (max-width: 900px) {
     nav { padding: 24px 28px; }
@@ -548,7 +1018,7 @@
     .hero { grid-template-columns: 1fr; }
     .hero-panel:first-child { display: none; }
     .section-tours, .section-about, .section-cta, footer { padding-left: 28px; padding-right: 28px; }
-    .cards { grid-template-columns: 1fr; }
+    .cards { grid-template-columns: 1fr 1fr; }
     .section-about { grid-template-columns: 1fr; }
     .about-image { display: none; }
   }
@@ -572,7 +1042,7 @@
 <!-- HERO -->
 <section class="hero">
   <div class="hero-panel">
-    <img src="images/mongolia1.jpg" alt="Mongolia landscape"/>
+    <img src="tour6.jpg" alt="Mongolia landscape"/>
     <div class="panel-label">
       <div class="country">Mongolia</div>
       <div class="tagline">The eternal blue sky</div>
@@ -580,7 +1050,7 @@
   </div>
 
   <div class="hero-panel">
-    <img src="images/japan1.jpg" alt="Japan cityscape"/>
+    <img src="tour7.jpg" alt="Japan cityscape"/>
     <div class="panel-label">
       <div class="country">Japan</div>
       <div class="tagline">Where tradition breathes</div>
@@ -631,43 +1101,128 @@
   </div>
 
   <div class="cards">
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=800&q=80" alt="Gobi Desert"/>
+    <div class="card" data-tour="0">
+      <img src="images/tour1.jpg" alt="Gobi Desert"/>
       <div class="card-body">
         <span class="card-tag">Mongolia → Japan</span>
-        <div class="card-title">Steppe to<br/>Sakura</div>
+        <div class="card-title">Steppe to Sakura</div>
         <div class="card-footer">
-          <span class="card-price">12 days · from $2,400</span>
+          <span class="card-price">4 days · 4,000,000₮</span>
           <div class="card-arrow">→</div>
         </div>
       </div>
     </div>
 
-    <div class="card" style="margin-top: 40px;">
-      <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&q=80" alt="Kyoto"/>
+    <div class="card" data-tour="1">
+      <img src="images/tour2.jpg" alt="Terelj"/>
+      <div class="card-body">
+        <span class="card-tag">Mongolia → Japan</span>
+        <div class="card-title">Terelj to Tokyo</div>
+        <div class="card-footer">
+          <span class="card-price">4 days · 4,000,000₮</span>
+          <div class="card-arrow">→</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-tour="2">
+      <img src="images/tour3.jpg" alt="Khövsgöl"/>
       <div class="card-body">
         <span class="card-tag">Japan → Mongolia</span>
-        <div class="card-title">Kyoto<br/>to Gobi</div>
+        <div class="card-title">Kyoto to Gobi</div>
         <div class="card-footer">
-          <span class="card-price">10 days · from $2,100</span>
+          <span class="card-price">4 days · 4,000,000₮</span>
           <div class="card-arrow">→</div>
         </div>
       </div>
     </div>
 
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80" alt="Mongolia mountains"/>
+    <div class="card" data-tour="3">
+      <img src="images/tour4.jpg" alt="Ulaanbaatar"/>
       <div class="card-body">
         <span class="card-tag">Full Circuit</span>
-        <div class="card-title">The Bond<br/>Route</div>
+        <div class="card-title">The Bond Route</div>
         <div class="card-footer">
-          <span class="card-price">21 days · from $4,800</span>
+          <span class="card-price">4 days · 4,000,000₮</span>
+          <div class="card-arrow">→</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-tour="4">
+      <img src="images/tour5.jpg" alt="Mongolia steppe"/>
+      <div class="card-body">
+        <span class="card-tag">Mongolia → Japan</span>
+        <div class="card-title">Nomad & Neon</div>
+        <div class="card-footer">
+          <span class="card-price">4 days · 4,000,000₮</span>
+          <div class="card-arrow">→</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-tour="5">
+      <img src="images/tour6.jpg" alt="Mongolia nature"/>
+      <div class="card-body">
+        <span class="card-tag">Japan → Mongolia</span>
+        <div class="card-title">Hokkaido to Khövsgöl</div>
+        <div class="card-footer">
+          <span class="card-price">4 days · 4,000,000₮</span>
+          <div class="card-arrow">→</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-tour="6">
+      <img src="images/tour.jpg" alt="Mongolia landscape"/>
+      <div class="card-body">
+        <span class="card-tag">Full Circuit</span>
+        <div class="card-title">Two Worlds, One Soul</div>
+        <div class="card-footer">
+          <span class="card-price">4 days · 4,000,000₮</span>
           <div class="card-arrow">→</div>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal">
+    <div class="modal-image">
+      <img src="" alt="" id="modalImg"/>
+    </div>
+    <div class="modal-content">
+      <div>
+        <span class="modal-tag" id="modalTag"></span>
+        <h2 class="modal-title" id="modalTitle"></h2>
+        <div class="modal-divider"></div>
+        <p class="modal-desc" id="modalDesc"></p>
+        <div class="modal-meta">
+          <div class="modal-meta-item">
+            <div class="label">Duration</div>
+            <div class="value">4 Days · 5 Nights</div>
+          </div>
+          <div class="modal-meta-item">
+            <div class="label">Price</div>
+            <div class="value">4,000,000₮</div>
+          </div>
+          <div class="modal-meta-item">
+            <div class="label">Group size</div>
+            <div class="value">Max 8 people</div>
+          </div>
+          <div class="modal-meta-item">
+            <div class="label">Departure</div>
+            <div class="value">Monthly</div>
+          </div>
+        </div>
+      </div>
+      <a href="mailto:hello@kizunatravel.com" class="modal-btn">Book This Tour →</a>
+    </div>
+    <button class="modal-close" id="modalClose">✕</button>
+  </div>
+</div>
 
 <!-- ABOUT -->
 <section class="section-about" id="about">
@@ -692,7 +1247,7 @@
     </div>
   </div>
   <div class="about-image">
-    <img src="images/landscape1.jpg" alt="Japan culture"/>
+    <img src="tour8.jpg" alt="Japan culture"/>
   </div>
 </section>
 
@@ -740,12 +1295,77 @@
     });
   }, { threshold: 0.1 });
 
-  document.querySelectorAll('.card, .stat-item, .about-text p').forEach(el => {
+  document.querySelectorAll('.stat-item, .about-text p').forEach(el => {
     el.style.opacity = '0';
     el.style.transform = 'translateY(24px)';
     el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
     observer.observe(el);
   });
+
+  // Card tilt effect
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const cx = rect.width / 2;
+      const cy = rect.height / 2;
+      const rotateX = ((y - cy) / cy) * -8;
+      const rotateY = ((x - cx) / cx) * 8;
+      card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+    });
+
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) scale(1)';
+      card.style.transition = 'transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+    });
+
+    card.addEventListener('mouseenter', () => {
+      card.style.transition = 'transform 0.15s ease, box-shadow 0.4s ease';
+    });
+  });
+
+  // Tour data
+  const tours = [
+    { tag: 'Mongolia → Japan', title: 'Steppe to Sakura', img: 'images/tour1.jpg', desc: 'Begin your journey on the vast Mongolian steppe under an infinite sky. Cross into Japan and arrive into a world of cherry blossoms, ancient temples, and quiet precision. A journey between two silences — one wild, one refined.' },
+    { tag: 'Mongolia → Japan', title: 'Terelj to Tokyo', img: 'images/tour2.jpg', desc: 'Start at the dramatic rock formations of Terelj National Park, riding horses through golden valleys. End in the electric pulse of Tokyo — neon, ramen, and the hum of ten million lives. The contrast is the journey.' },
+    { tag: 'Japan → Mongolia', title: 'Kyoto to Gobi', img: 'images/tour3.jpg', desc: 'Leave the lantern-lit streets of Kyoto and arrive into the raw silence of the Gobi Desert. Stars overhead, sand dunes at your feet, nothing between you and the horizon. The world feels different out here.' },
+    { tag: 'Full Circuit', title: 'The Bond Route', img: 'images/tour4.jpg', desc: 'Our signature full-circuit journey. Mongolia to Japan and back — experiencing both countries at their deepest. Designed for those who want to truly understand what Kizuna means. The bond you form with these lands stays with you.' },
+    { tag: 'Mongolia → Japan', title: 'Nomad & Neon', img: 'images/tour5.jpg', desc: 'Sleep in a ger on the steppe. Three days later, check into a capsule hotel in Shibuya. This tour is built around contrast — ancient nomadic life versus hyper-modern Japan. Both will surprise you.' },
+    { tag: 'Japan → Mongolia', title: 'Hokkaido to Khövsgöl', img: 'images/tour6.jpg', desc: 'Two of the most untouched landscapes in Asia. Hokkaido\'s volcanic lakes and lavender fields give way to Khövsgöl — Mongolia\'s sacred blue pearl of the north. Nature, undisturbed.' },
+    { tag: 'Full Circuit', title: 'Two Worlds, One Soul', img: 'images/tour7.jpg', desc: 'The most intimate tour we offer. Small group of four, private guides, no fixed itinerary. You tell us what you want to feel — we build the journey around it. Mongolia and Japan, on your terms.' }
+  ];
+
+  // Modal logic
+  const overlay = document.getElementById('modalOverlay');
+  const modalImg = document.getElementById('modalImg');
+  const modalTag = document.getElementById('modalTag');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalDesc = document.getElementById('modalDesc');
+  const modalClose = document.getElementById('modalClose');
+
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', () => {
+      const i = parseInt(card.dataset.tour);
+      const t = tours[i];
+      modalImg.src = t.img;
+      modalImg.alt = t.title;
+      modalTag.textContent = t.tag;
+      modalTitle.textContent = t.title;
+      modalDesc.textContent = t.desc;
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  function closeModal() {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  modalClose.addEventListener('click', closeModal);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 </script>
 </body>
 </html>
